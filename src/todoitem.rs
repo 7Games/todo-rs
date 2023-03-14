@@ -3,7 +3,7 @@ pub struct TodoItem {
     ticked: bool,
 }
 
-pub fn print_list(todo_list: Vec<TodoItem>) {
+pub fn print_list(todo_list: &Vec<TodoItem>) {
     for i in 0..todo_list.len() {
         println!(" {} [{}] {}", (i + 1), (if todo_list[i].ticked == true {"x"} else {" "}), todo_list[i].name);
     }
@@ -19,5 +19,5 @@ pub fn delete_item(index: usize, todo_list: &mut Vec<TodoItem>) {
 }
 
 pub fn tick_item(index: usize, todo_list: &mut Vec<TodoItem>) {
-    todo_list[index].ticked = true;
+    todo_list[index].ticked = !todo_list[index].ticked;
 }
