@@ -1,6 +1,6 @@
 pub struct TodoItem {
-    name: String,
-    ticked: bool,
+    pub name: String,
+    pub ticked: bool,
 }
 
 pub fn print_list(todo_list: &Vec<TodoItem>) {

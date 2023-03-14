@@ -20,6 +20,7 @@ fn add_item_ui(todo_list: &mut Vec<TodoItem>) {
     item_name = item_name.replace('\n', "");
 
     loop {
+        clear_terminal();
         print!("Do you want to add “{}” to the list?\n\x1b[4mY\x1b[0mes/\x1b[4mN\x1b[0mo  ", item_name);
 
         std::io::stdout().flush().unwrap();
@@ -47,7 +48,7 @@ fn select_item_ui(todo_list: &mut Vec<TodoItem>, thing: &str) {
         let mut option: String = String::new();
         let mut _index: usize = 0;
 
-        print!("Select an index: ");
+        print!("Select an index (enter '0' to stop): ");
 
         std::io::stdout().flush().unwrap();
         std::io::stdin().read_line(&mut option).unwrap();
@@ -61,6 +62,10 @@ fn select_item_ui(todo_list: &mut Vec<TodoItem>, thing: &str) {
             },
         };
 
+        if _index == 0 {
+            break;
+        }
+
         if _index < 1 || _index > todo_list.len() {
             println!("Not a valid index");
             thread::sleep(time::Duration::from_millis(3000));
@@ -68,6 +73,25 @@ fn select_item_ui(todo_list: &mut Vec<TodoItem>, thing: &str) {
         }
 
         if thing == "delete" {
+            loop {
+                clear_terminal();
+                option = String::new();
+    
+                print!("Are you sure you want to remove “{}” from the list?\n\x1b[4mY\x1b[0mes/\x1b[4mN\x1b[0mo  ", todo_list[_index - 1].name);
+                std::io::stdout().flush().unwrap();
+                std::io::stdin().read_line(&mut option).unwrap();
+                option = option.replace('\n', "");
+                option = option.to_lowercase();
+    
+                if option == "yes" || option == "y" {
+                    break;
+                } else if option == "no" || option == "n" {
+                    return;
+                } else {
+                    continue;
+                }
+            }
+
             delete_item(_index - 1, todo_list);
         } else if thing == "tick" {
             tick_item(_index - 1, todo_list);
@@ -109,9 +133,21 @@ pub fn menu_ui() {
             // TODO: Add save
         } else if input == "load" || input == "l" {
             // TODO: Add load
-        }  else if input == "quit" || input == "q" {
+        } else if input == "quit" || input == "q" {
+            input = String::new();
+
             clear_terminal();
-            break;
+            print!("Do you want to quit? Your list will not be saved!\n\x1b[4mY\x1b[0mes/\x1b[4mN\x1b[0mo  ");
+
+            std::io::stdout().flush().unwrap();
+            std::io::stdin().read_line(&mut input).unwrap();
+            input = input.replace('\n', "");
+            input = input.to_lowercase();
+
+            if input == "y" || input == "yes" {
+                clear_terminal();
+                break;
+            }
         }
     }
 }
