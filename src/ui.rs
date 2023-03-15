@@ -1,4 +1,5 @@
 use crate::todoitem::*;
+use crate::file::*;
 use std::io::Write;
 use std::{thread, time};
 
@@ -74,9 +75,9 @@ fn select_item_ui(todo_list: &mut Vec<TodoItem>, thing: &str) {
 
         if thing == "delete" {
             loop {
-                clear_terminal();
                 option = String::new();
-    
+
+                clear_terminal();
                 print!("Are you sure you want to remove “{}” from the list?\n\x1b[4mY\x1b[0mes/\x1b[4mN\x1b[0mo  ", todo_list[_index - 1].name);
                 std::io::stdout().flush().unwrap();
                 std::io::stdin().read_line(&mut option).unwrap();
@@ -130,7 +131,20 @@ pub fn menu_ui() {
         } else if input == "tick" || input == "t" {
             select_item_ui(&mut todo_list, "tick");
         } else if input == "save" || input == "s" {
-            // TODO: Add save
+            input = String::new();
+
+            clear_terminal();
+            print!("Are you sure you want to save this list to disk?\nAny list saved before will be deleted!\n\x1b[4mY\x1b[0mes/\x1b[4mN\x1b[0mo  ");
+
+            std::io::stdout().flush().unwrap();
+            std::io::stdin().read_line(&mut input).unwrap();
+            input = input.replace('\n', "");
+            input = input.to_lowercase();
+
+            if input == "y" || input == "yes" {
+                save_list(&todo_list);
+                break;
+            }
         } else if input == "load" || input == "l" {
             // TODO: Add load
         } else if input == "quit" || input == "q" {
