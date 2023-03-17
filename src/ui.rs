@@ -143,10 +143,21 @@ pub fn menu_ui() {
 
             if input == "y" || input == "yes" {
                 save_list(&todo_list);
-                break;
             }
         } else if input == "load" || input == "l" {
-            // TODO: Add load
+            input = String::new();
+
+            clear_terminal();
+            print!("Are you sure you want to load a list from disk?\nThis will clear your current list!\n\x1b[4mY\x1b[0mes/\x1b[4mN\x1b[0mo  ");
+
+            std::io::stdout().flush().unwrap();
+            std::io::stdin().read_line(&mut input).unwrap();
+            input = input.replace('\n', "");
+            input = input.to_lowercase();
+
+            if input == "y" || input == "yes" {
+                load_list(&mut todo_list);
+            }
         } else if input == "quit" || input == "q" {
             input = String::new();
 
